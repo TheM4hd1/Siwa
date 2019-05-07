@@ -9,26 +9,44 @@
 import Foundation
 
 public protocol APIBuilderProtocol {
-    func setUser() -> APIBuilderProtocol
-    func setURLSession() -> APIBuilderProtocol
-    func setRequestDelay() -> APIBuilderProtocol
-    func build() throws -> APIHandlerProtocol
+    func setUser(user: User) -> APIBuilderProtocol
+    func setURLSession(urlSession: URLSession) -> APIBuilderProtocol
+    func setRequestDelay(delay: Delay) -> APIBuilderProtocol
+    func build() throws -> APIHandler
 }
 
 public class APIBuilder: APIBuilderProtocol {
-    public func setUser() -> APIBuilderProtocol {
+    
+    private var _user: User?
+    private var _delay: Delay?
+    private var _urlSession: URLSession?
+    
+    public func setUser(user: User) -> APIBuilderProtocol {
+        _user = user
         return self
     }
     
-    public func setURLSession() -> APIBuilderProtocol {
+    public func setURLSession(urlSession: URLSession) -> APIBuilderProtocol {
+        _urlSession = urlSession
         return self
     }
     
-    public func setRequestDelay() -> APIBuilderProtocol {
+    public func setRequestDelay(delay: Delay) -> APIBuilderProtocol {
+        _delay = delay
         return self
     }
     
-    public func build() throws -> APIHandlerProtocol {
-        return APIHandler()
+    public func build() throws -> APIHandler {
+        guard let user = _user else { throw SiwaErrors.authenticationRequired }
+        
+        if _urlSession == nil {
+            _urlSession = URLSession(configuration: .default)
+        }
+        
+        if _delay == nil {
+            _delay = .default
+        }
+        
+        return try APIHandler(user: user, urlSession: _urlSession!, delay: _delay!)
     }
 }
