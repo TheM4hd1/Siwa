@@ -21,8 +21,16 @@ public enum VerificationResponse {
 
 public enum ChallengeVerificationResponse {
     case accepted
+    case checkpointDismiss
     case incorrect
     case loginFailed
     case noRedirect
+    case unknown
+}
+
+public enum TwofactorVerificationResponse {
+    case invalidCode
+    case success
+    case failed
     case unknown
 }

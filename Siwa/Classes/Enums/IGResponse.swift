@@ -14,8 +14,11 @@ public enum IGResponse {
     case loginRequired
     case checkpointRequired
     case twoFactorRequired
+    case checkpointLoop
+    case alreadyLoggedIn
     case actionBlocked
     case wrongPassword
     case wrongUsername
+    case nilData
     case unknwon
 }

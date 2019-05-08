@@ -13,6 +13,7 @@ public enum SiwaErrors: Error {
     case usernameRequired
     case passwordRequired
     case checkpointNotfound
+    case twofactorNotfound
 }
 
 extension SiwaErrors: LocalizedError {
@@ -36,6 +37,11 @@ extension SiwaErrors: LocalizedError {
         case .checkpointNotfound:
             return NSLocalizedString(
                 "checkpoint url notfound",
+                comment: ""
+            )
+        case .twofactorNotfound:
+            return NSLocalizedString(
+                "twofactor data notfound",
                 comment: ""
             )
         }

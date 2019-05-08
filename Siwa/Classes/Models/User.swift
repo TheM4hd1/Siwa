@@ -12,11 +12,13 @@ public struct User: Codable {
     public var username: String
     public var password: String
     public var csrftoken: String
+    public var id: String
     
     public init(username: String, password: String) {
         self.username = username
         self.password = password
         self.csrftoken = ""
+        self.id = ""
     }
 }
 

@@ -20,9 +20,16 @@ public struct LoginResponse: Codable {
     public var lock: Bool?
     public var user: Bool?
     public var authenticated: Bool?
+    public var userId: String?
+    public var fr: String?
     public var twoFactorRequired: Bool?
     public var twoFactorInfo: TwoFactorInfo?
     public var status: String?
+}
+
+public struct TwoFactor: Codable {
+    public var message: String?
+    public var twoFactorRequired: Bool?
 }
 
 public struct TwoFactorInfo: Codable {

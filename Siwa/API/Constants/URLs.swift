@@ -17,7 +17,6 @@ struct URLs {
     private static let loginPath = "/accounts/login/ajax/"
     private static let twoFactorPath = "/accounts/login/ajax/two_factor/"
     private static let twoFactorResendPath = "/accounts/send_two_factor_login_sms/"
-
     static func home() -> URL {
         return URL(string: instagram)!
     }
