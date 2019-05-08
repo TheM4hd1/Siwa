@@ -21,6 +21,10 @@ public class APIBuilder: APIBuilderProtocol {
     private var _delay: Delay?
     private var _urlSession: URLSession?
     
+    public init() {
+        
+    }
+    
     public func setUser(user: User) -> APIBuilderProtocol {
         _user = user
         return self
