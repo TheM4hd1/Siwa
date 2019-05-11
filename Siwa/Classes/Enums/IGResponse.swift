@@ -17,8 +17,8 @@ public enum IGResponse {
     case checkpointLoop
     case alreadyLoggedIn
     case actionBlocked
-    case wrongPassword
-    case wrongUsername
-    case nilData
+    case inccorrectPassword
+    case invalidUsername
+    case dataMissing
     case unknwon
 }

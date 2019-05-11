@@ -27,11 +27,6 @@ public struct LoginResponse: Codable {
     public var status: String?
 }
 
-public struct TwoFactor: Codable {
-    public var message: String?
-    public var twoFactorRequired: Bool?
-}
-
 public struct TwoFactorInfo: Codable {
     public var username: String?
     public var smsTwoFactorOn: Bool?
