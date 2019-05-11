@@ -13,6 +13,7 @@ public protocol APIHandlerProtocols {
     func sendChallengeVerification(method: VerificationMethod, completion: @escaping (Result<VerificationResponse>) -> ()) throws
     func sendChallengeSecurityCode(code: String, completion: @escaping (Result<ChallengeVerificationResponse>) -> ()) throws
     func sendTwofactorSecurityCode(code: String, completion: @escaping (Result<TwofactorVerificationResponse>) -> ()) throws
+    func resendTwofactorSecurityCode(completion: @escaping (Result<VerificationResponse>) -> ()) throws
 }
 
 public class APIHandler: APIHandlerProtocols {
@@ -67,9 +68,9 @@ public class APIHandler: APIHandlerProtocols {
                                         self._user.id = result.userId!
                                         completion(Return.success(value: .success, rawData: data))
                                     } else if result.user ?? false {
-                                        completion(Return.fail(error: nil, rawData: data, value: .wrongPassword))
+                                        completion(Return.fail(error: nil, rawData: data, value: .inccorrectPassword))
                                     } else {
-                                        completion(Return.fail(error: nil, rawData: data, value: .wrongUsername))
+                                        completion(Return.fail(error: nil, rawData: data, value: .invalidUsername))
                                     }
                                 } else {
                                     completion(Return.fail(error: nil, rawData: data, value: .unknwon))
@@ -111,7 +112,7 @@ public class APIHandler: APIHandlerProtocols {
                 }
             }
         } else {
-            throw SiwaErrors.checkpointNotfound
+            throw SiwaErrors.checkpointMissing
         }
     }
     
@@ -146,7 +147,7 @@ public class APIHandler: APIHandlerProtocols {
                 }
             }
         } else {
-            throw SiwaErrors.checkpointNotfound
+            throw SiwaErrors.checkpointMissing
         }
     }
     
@@ -177,7 +178,45 @@ public class APIHandler: APIHandlerProtocols {
                 }
             }
         } else {
-            throw SiwaErrors.twofactorNotfound
+            throw SiwaErrors.twofactorMissing
+        }
+    }
+    
+    public func resendTwofactorSecurityCode(completion: @escaping (Result<VerificationResponse>) -> ()) throws {
+        if let twoFactor = _twoFactor {
+            let _url = URLs.resendTwoFactorCode()
+            let headers = ["X-CSRFToken": _user.csrftoken,
+                           "Referer": _url.absoluteString,
+                           "X-Instagram-AJAX": "1",
+                           "X-Requested-With": "XMLHttpRequest",
+                           "Content-Type": "application/x-www-form-urlencoded"]
+            let body = ["username": _user.username,
+                        "identifier": twoFactor.twoFactorIdentifier!]
+            
+            _httpHelper.sendAsync(method: .post, url: _url, body: body, header: headers) { (data, response, error) in
+                if let error = error {
+                    completion(Return.fail(error: error, rawData: data, value: .failed))
+                } else {
+                    if response?.statusCode == 200 {
+                        if let data = data {
+                            if let stringData = String(data: data, encoding: .utf8) {
+                                if stringData.contains("two_factor_required") {
+                                    let decoder = JSONDecoder()
+                                    decoder.keyDecodingStrategy = .convertFromSnakeCase
+                                    let res = try! decoder.decode(LoginResponse.self, from: data)
+                                    self._twoFactor = res.twoFactorInfo
+                                    completion(Return.success(value: .codeSent, rawData: data))
+                                }
+                            }
+                        }
+                    } else {
+                        completion(Return.fail(error: nil, rawData: data, value: .failed))
+                    }
+                }
+            }
+            
+        } else {
+            throw SiwaErrors.twofactorMissing
         }
     }
     
@@ -211,7 +250,7 @@ public class APIHandler: APIHandlerProtocols {
                         }
                     }
                 } else {
-                    completion(Return.fail(error: nil, rawData: data, value: .nilData))
+                    completion(Return.fail(error: nil, rawData: data, value: .dataMissing))
                 }
             }
         }
