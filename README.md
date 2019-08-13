@@ -1,20 +1,16 @@
-### About Siwa ###
-**Siwa** is a helper framework for [SwiftyInsta](https://github.com/TheM4hd1/SwiftyInsta) to solve login problems such as ```sentry_block``` error.
+## Siwa
+[![Status](https://img.shields.io/badge/status-Discontinued-critical)](https://github.com/TheM4hd1/SwiftyInsta)  
 
-You need to combine these two frameworks to use all available features in ```Instagram API```
+**Siwa** was a helper framework for [SwiftyInsta](https://github.com/TheM4hd1/SwiftyInsta) `1.*`, providing a way to solve some common login issues (e.g. `sentry_block`).
+You would need both frameworks to acess all of **Instagram Private API** features.
 
-use ```loginHandler``` to request login authentication and use ```apiHandler``` to do other requests such as ```like, follow, comment, receiving medias or ...```
+**[SwiftyInsta](https://github.com/TheM4hd1/SwiftyInsta) `2.*` already relies on Siwa's authentication method when using [`Credentials`](https://github.com/TheM4hd1/SwiftyInsta/wiki/Usage)**.
 
 ## Installation ##
+**Siwa** is compatible with **SwiftyInsta** `1.*` only.  
+
 ### CocoaPods ###
 ```pod 'Siwa'```
-
-### Manually ###
-To use this library in your project manually you may: 
-- Add compiled framework from ```General > Linked frameworks and libraries ```
-- Clone the project, right click on your root project and select Add files..., then select the ```Siwa.xcodeproj```. 
-after that go to your ```project > embeded libraries``` and select ```Siwa.framework```, build the project and import ```Siwa```
-
 
 #### Create API Handlers ####
 ```swift
